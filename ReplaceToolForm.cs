@@ -28,108 +28,10 @@ namespace ReplaceTool
                 FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).LegalCopyright;
         }
 
-        public void openFileDialog_TargetFile_FileOk(object sender, CancelEventArgs e)
-        {
-            // GET TARGET FILE INFO
-            FileInfo targetFile = new FileInfo(openFileDialog_TargetFile.FileName);
-
-            // CHECK FILE SIZE
-            if (targetFile.Length <= maxFileSize)
-            {
-                // SET TARGET FILENAME AND PATH LABEL
-                lbl_SourceFile.Text = targetFile.FullName;
-
-                // CHECK VARIABLES
-                btn_CheckTarget_Click(this, null);
-            }
-            else
-            {
-                MessageBox.Show(
-                    "Target file is too big ->> " + targetFile.Length + " bytes" +
-                    Environment.NewLine + Environment.NewLine +
-                    "File could not be processed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         public void btn_SelectSourceFile_Click(object sender, EventArgs e)
         {
-            openFileDialog_TargetFile.InitialDirectory = Directory.GetCurrentDirectory();
-            openFileDialog_TargetFile.ShowDialog();
-        }
-
-        public void btn_CheckTarget_Click(object sender, EventArgs e)
-        {
-            // CHECK TARGET FILE EXISTENCE
-            if (File.Exists(lbl_SourceFile.Text))
-            {
-                btn_CheckTarget.Enabled = true;
-
-                bool toBeUpdated = false;
-
-                // READ TARGET FILE CONTENT TO WORKING VARIABLE
-                targetFileString = File.ReadAllText(lbl_SourceFile.Text);
-
-                // CLEAR WORKING LIST OF REPLACE VARIABLES
-                variablesReplaceList.Clear();
-
-                // ITERATE GRIDVIEW AND GET ITEMS
-                foreach (DataGridViewRow variablesListGridItem in variablesListGridView.Rows)
-                {
-                    if (!string.IsNullOrEmpty(variablesListGridItem.Cells["col_VarName"].FormattedValue.ToString()) &&
-                        !string.IsNullOrEmpty(variablesListGridItem.Cells["col_VarValue"].FormattedValue.ToString()))
-                    {
-                        string regExPattern = 
-                            variablesListGridItem.
-                                Cells["col_VarName"].
-                                    FormattedValue.
-                                        ToString().
-                                            Replace("^", @"\^").
-                                            Replace("$", @"\$").
-                                            Replace(".", @"\.").
-                                            Replace("|", @"\|").
-                                            Replace("?", @"\?").
-                                            Replace("*", @"\*").
-                                            Replace("+", @"\+").
-                                            Replace("(", @"\(").Replace(")", @"\)").
-                                            Replace("[", @"\[").Replace("]", @"\]").
-                                            Replace("{", @"\{").
-                                            Replace("}", @"\}");
-
-                        // GET VARIABLE REPLACE ITEM
-                        VariableReplaceItem variablesReplaceItem = new VariableReplaceItem
-                        { Enabled = (bool)variablesListGridItem.Cells["col_Enabled"].FormattedValue,
-                          VarName = variablesListGridItem.Cells["col_VarName"].FormattedValue.ToString(),
-                          VarValue = variablesListGridItem.Cells["col_VarValue"].FormattedValue.ToString(),
-                          Occurrences = Regex.Matches(targetFileString, regExPattern).Count };
-
-                        // ADD VARIABLE REPLACE ITEM TO WORKING LIST
-                        variablesReplaceList.Add(variablesReplaceItem);
-
-                        // ADD VARIABLE OCCURRENCES COUNT TO GRID
-                        variablesListGridView.Rows[variablesListGridItem.Index].Cells["col_Occurrences"].Value = variablesReplaceItem.Occurrences;
-                        variablesListGridView.Refresh();
-                        
-                        if (variablesReplaceItem.Enabled &&
-                            variablesReplaceItem.Occurrences > 0)
-                        {
-                            toBeUpdated = true;
-                        }
-                    }
-                }
-
-                // ENABLE REPLACE BUTTON, IF AT LEAST ONE POSSIBLE ENABLED VARIABLE IS ON THE LIST
-                btn_Replace.Enabled = toBeUpdated;
-            }
-            else
-            {
-                MessageBox.Show(
-                    "Selected target file not found ->> " + lbl_SourceFile.Text +
-                    Environment.NewLine + Environment.NewLine +
-                    "You must browse existing file.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                lbl_SourceFile.Text = string.Empty;
-                btn_CheckTarget.Enabled = false;
-            }
+            openFileDialog_SourceFile.InitialDirectory = Directory.GetCurrentDirectory();
+            openFileDialog_SourceFile.ShowDialog();
         }
 
         public void variablesListGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -157,8 +59,11 @@ namespace ReplaceTool
 
             File.WriteAllText(lbl_SourceFile.Text, targetFileString);
 
+            btn_CheckSource_Click(this, null);
+
             MessageBox.Show(
-                    "Updated file has been saved.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    "Target file has been processed and saved.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
         }
 
         public void openFileDialog_VariablesList_FileOk(object sender, CancelEventArgs e)
@@ -192,18 +97,13 @@ namespace ReplaceTool
 
             variablesListGridView.Update();
 
-            btn_CheckTarget_Click(this, null);
+            btn_CheckSource_Click(this, null);
         }
 
         public void btn_LoadVarListFile_Click(object sender, EventArgs e)
         {
             openFileDialog_VariablesList.InitialDirectory = Directory.GetCurrentDirectory();
             openFileDialog_VariablesList.ShowDialog();
-        }
-
-        public void btn_SelectTargetFile_Click(object sender, EventArgs e)
-        {
-
         }
 
         public static string GetVersionString(Version version, bool addBuildNumber, bool addRevisionNumber)
@@ -223,6 +123,106 @@ namespace ReplaceTool
             }
 
             return versionString;
+        }
+
+        private void openFileDialog_SourceFile_FileOk(object sender, CancelEventArgs e)
+        {
+            // GET SOPURCE FILE INFO
+            FileInfo sourceFile = new FileInfo(openFileDialog_SourceFile.FileName);
+
+            // CHECK FILE SIZE
+            if (sourceFile.Length <= maxFileSize)
+            {
+                // SET SOURCE FILENAME AND PATH LABEL
+                lbl_SourceFile.Text = sourceFile.FullName;
+
+                // CHECK VARIABLES
+                btn_CheckSource_Click(this, null);
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Source file is too big ->> " + sourceFile.Length + " bytes" +
+                    Environment.NewLine + Environment.NewLine +
+                    "File could not be processed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btn_CheckSource_Click(object sender, EventArgs e)
+        {
+            // CHECK TARGET FILE EXISTENCE
+            if (File.Exists(lbl_SourceFile.Text))
+            {
+                btn_CheckSource.Enabled = true;
+
+                bool toBeUpdated = false;
+
+                // READ TARGET FILE CONTENT TO WORKING VARIABLE
+                targetFileString = File.ReadAllText(lbl_SourceFile.Text);
+
+                // CLEAR WORKING LIST OF REPLACE VARIABLES
+                variablesReplaceList.Clear();
+
+                // ITERATE GRIDVIEW AND GET ITEMS
+                foreach (DataGridViewRow variablesListGridItem in variablesListGridView.Rows)
+                {
+                    if (!string.IsNullOrEmpty(variablesListGridItem.Cells["col_VarName"].FormattedValue.ToString()) &&
+                        !string.IsNullOrEmpty(variablesListGridItem.Cells["col_VarValue"].FormattedValue.ToString()))
+                    {
+                        string regExPattern =
+                            variablesListGridItem.
+                                Cells["col_VarName"].
+                                    FormattedValue.
+                                        ToString().
+                                            Replace("^", @"\^").
+                                            Replace("$", @"\$").
+                                            Replace(".", @"\.").
+                                            Replace("|", @"\|").
+                                            Replace("?", @"\?").
+                                            Replace("*", @"\*").
+                                            Replace("+", @"\+").
+                                            Replace("(", @"\(").Replace(")", @"\)").
+                                            Replace("[", @"\[").Replace("]", @"\]").
+                                            Replace("{", @"\{").
+                                            Replace("}", @"\}");
+
+                        // GET VARIABLE REPLACE ITEM
+                        VariableReplaceItem variablesReplaceItem = new VariableReplaceItem
+                        {
+                            Enabled = (bool)variablesListGridItem.Cells["col_Enabled"].FormattedValue,
+                            VarName = variablesListGridItem.Cells["col_VarName"].FormattedValue.ToString(),
+                            VarValue = variablesListGridItem.Cells["col_VarValue"].FormattedValue.ToString(),
+                            Occurrences = Regex.Matches(targetFileString, regExPattern).Count
+                        };
+
+                        // ADD VARIABLE REPLACE ITEM TO WORKING LIST
+                        variablesReplaceList.Add(variablesReplaceItem);
+
+                        // ADD VARIABLE OCCURRENCES COUNT TO GRID
+                        variablesListGridView.Rows[variablesListGridItem.Index].Cells["col_Occurrences"].Value = variablesReplaceItem.Occurrences;
+                        variablesListGridView.Refresh();
+
+                        if (variablesReplaceItem.Enabled &&
+                            variablesReplaceItem.Occurrences > 0)
+                        {
+                            toBeUpdated = true;
+                        }
+                    }
+                }
+
+                // ENABLE REPLACE BUTTON, IF AT LEAST ONE POSSIBLE ENABLED VARIABLE IS ON THE LIST
+                btn_Replace.Enabled = toBeUpdated;
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Selected target file not found ->> " + lbl_SourceFile.Text +
+                    Environment.NewLine + Environment.NewLine +
+                    "You must browse existing file.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                lbl_SourceFile.Text = string.Empty;
+                btn_CheckSource.Enabled = false;
+            }
         }
     }
     public class VariableReplaceItem

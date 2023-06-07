@@ -39,8 +39,8 @@
             this.btn_LoadVarListFile = new System.Windows.Forms.Button();
             this.lbl_SourceFile = new System.Windows.Forms.Label();
             this.lbl_LoadVarListFile = new System.Windows.Forms.Label();
-            this.openFileDialog_TargetFile = new System.Windows.Forms.OpenFileDialog();
-            this.btn_CheckTarget = new System.Windows.Forms.Button();
+            this.openFileDialog_SourceFile = new System.Windows.Forms.OpenFileDialog();
+            this.btn_CheckSource = new System.Windows.Forms.Button();
             this.openFileDialog_VariablesList = new System.Windows.Forms.OpenFileDialog();
             this.lbl_TargetFile = new System.Windows.Forms.Label();
             this.btn_SelectTargetFile = new System.Windows.Forms.Button();
@@ -168,24 +168,24 @@
             this.lbl_LoadVarListFile.TabIndex = 6;
             this.lbl_LoadVarListFile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // openFileDialog_TargetFile
+            // openFileDialog_SourceFile
             // 
-            this.openFileDialog_TargetFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_TargetFile_FileOk);
+            this.openFileDialog_SourceFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_SourceFile_FileOk);
             // 
-            // btn_CheckTarget
+            // btn_CheckSource
             // 
-            this.btn_CheckTarget.BackColor = System.Drawing.Color.DimGray;
-            this.btn_CheckTarget.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btn_CheckTarget.Enabled = false;
-            this.btn_CheckTarget.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_CheckTarget.ForeColor = System.Drawing.Color.DarkGreen;
-            this.btn_CheckTarget.Location = new System.Drawing.Point(12, 507);
-            this.btn_CheckTarget.Name = "btn_CheckTarget";
-            this.btn_CheckTarget.Size = new System.Drawing.Size(127, 30);
-            this.btn_CheckTarget.TabIndex = 7;
-            this.btn_CheckTarget.Text = "Check Target";
-            this.btn_CheckTarget.UseVisualStyleBackColor = false;
-            this.btn_CheckTarget.Click += new System.EventHandler(this.btn_CheckTarget_Click);
+            this.btn_CheckSource.BackColor = System.Drawing.Color.DimGray;
+            this.btn_CheckSource.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_CheckSource.Enabled = false;
+            this.btn_CheckSource.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_CheckSource.ForeColor = System.Drawing.Color.DarkGreen;
+            this.btn_CheckSource.Location = new System.Drawing.Point(12, 507);
+            this.btn_CheckSource.Name = "btn_CheckSource";
+            this.btn_CheckSource.Size = new System.Drawing.Size(127, 30);
+            this.btn_CheckSource.TabIndex = 7;
+            this.btn_CheckSource.Text = "Check Source";
+            this.btn_CheckSource.UseVisualStyleBackColor = false;
+            this.btn_CheckSource.Click += new System.EventHandler(this.btn_CheckSource_Click);
             // 
             // openFileDialog_VariablesList
             // 
@@ -215,7 +215,6 @@
             this.btn_SelectTargetFile.TabIndex = 8;
             this.btn_SelectTargetFile.Text = "Load Target File";
             this.btn_SelectTargetFile.UseVisualStyleBackColor = false;
-            this.btn_SelectTargetFile.Click += new System.EventHandler(this.btn_SelectTargetFile_Click);
             // 
             // lbl_VariablesList
             // 
@@ -252,7 +251,7 @@
             this.Controls.Add(this.lbl_VariablesList);
             this.Controls.Add(this.lbl_TargetFile);
             this.Controls.Add(this.btn_SelectTargetFile);
-            this.Controls.Add(this.btn_CheckTarget);
+            this.Controls.Add(this.btn_CheckSource);
             this.Controls.Add(this.lbl_LoadVarListFile);
             this.Controls.Add(this.lbl_SourceFile);
             this.Controls.Add(this.btn_LoadVarListFile);
@@ -280,8 +279,8 @@
         public System.Windows.Forms.Button btn_LoadVarListFile;
         public System.Windows.Forms.Label lbl_SourceFile;
         public System.Windows.Forms.Label lbl_LoadVarListFile;
-        public System.Windows.Forms.OpenFileDialog openFileDialog_TargetFile;
-        public System.Windows.Forms.Button btn_CheckTarget;
+        public System.Windows.Forms.OpenFileDialog openFileDialog_SourceFile;
+        public System.Windows.Forms.Button btn_CheckSource;
         public System.Windows.Forms.DataGridViewCheckBoxColumn col_Enabled;
         public System.Windows.Forms.DataGridViewTextBoxColumn col_VarName;
         public System.Windows.Forms.DataGridViewTextBoxColumn col_VarValue;
