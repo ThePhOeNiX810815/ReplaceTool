@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ReplaceTool
 {
@@ -21,9 +19,16 @@ namespace ReplaceTool
         public ReplaceToolForm()
         {
             InitializeComponent();
+
+            lbl_Version.Text =
+                FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductName +
+                " - Version " +
+                GetVersionString(Assembly.GetExecutingAssembly().GetName().Version, true, false) +
+                " - " +
+                FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).LegalCopyright;
         }
 
-        private void openFileDialog_TargetFile_FileOk(object sender, CancelEventArgs e)
+        public void openFileDialog_TargetFile_FileOk(object sender, CancelEventArgs e)
         {
             // GET TARGET FILE INFO
             FileInfo targetFile = new FileInfo(openFileDialog_TargetFile.FileName);
@@ -32,7 +37,7 @@ namespace ReplaceTool
             if (targetFile.Length <= maxFileSize)
             {
                 // SET TARGET FILENAME AND PATH LABEL
-                lbl_LoadTargetFile.Text = targetFile.FullName;
+                lbl_SourceFile.Text = targetFile.FullName;
 
                 // CHECK VARIABLES
                 btn_CheckTarget_Click(this, null);
@@ -46,22 +51,23 @@ namespace ReplaceTool
             }
         }
 
-        private void btn_LoadTargetFile_Click(object sender, EventArgs e)
+        public void btn_SelectSourceFile_Click(object sender, EventArgs e)
         {
+            openFileDialog_TargetFile.InitialDirectory = Directory.GetCurrentDirectory();
             openFileDialog_TargetFile.ShowDialog();
         }
 
-        private void btn_CheckTarget_Click(object sender, EventArgs e)
+        public void btn_CheckTarget_Click(object sender, EventArgs e)
         {
             // CHECK TARGET FILE EXISTENCE
-            if (File.Exists(lbl_LoadTargetFile.Text))
+            if (File.Exists(lbl_SourceFile.Text))
             {
                 btn_CheckTarget.Enabled = true;
 
                 bool toBeUpdated = false;
 
                 // READ TARGET FILE CONTENT TO WORKING VARIABLE
-                targetFileString = File.ReadAllText(lbl_LoadTargetFile.Text);
+                targetFileString = File.ReadAllText(lbl_SourceFile.Text);
 
                 // CLEAR WORKING LIST OF REPLACE VARIABLES
                 variablesReplaceList.Clear();
@@ -117,11 +123,11 @@ namespace ReplaceTool
             else
             {
                 MessageBox.Show(
-                    "Selected target file not found ->> " + lbl_LoadTargetFile.Text +
+                    "Selected target file not found ->> " + lbl_SourceFile.Text +
                     Environment.NewLine + Environment.NewLine +
                     "You must browse existing file.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                lbl_LoadTargetFile.Text = string.Empty;
+                lbl_SourceFile.Text = string.Empty;
                 btn_CheckTarget.Enabled = false;
             }
         }
@@ -139,7 +145,7 @@ namespace ReplaceTool
             }
         }
 
-        private void btn_Replace_Click(object sender, EventArgs e)
+        public void btn_Replace_Click(object sender, EventArgs e)
         {
             foreach (VariableReplaceItem replaceItem in variablesReplaceList)
             {
@@ -149,13 +155,13 @@ namespace ReplaceTool
                 }
             }
 
-            File.WriteAllText(lbl_LoadTargetFile.Text, targetFileString);
+            File.WriteAllText(lbl_SourceFile.Text, targetFileString);
 
             MessageBox.Show(
                     "Updated file has been saved.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void openFileDialog_VariablesList_FileOk(object sender, CancelEventArgs e)
+        public void openFileDialog_VariablesList_FileOk(object sender, CancelEventArgs e)
         {
             lbl_LoadVarListFile.Text = openFileDialog_VariablesList.FileName;
 
@@ -189,9 +195,34 @@ namespace ReplaceTool
             btn_CheckTarget_Click(this, null);
         }
 
-        private void btn_LoadVarListFile_Click(object sender, EventArgs e)
+        public void btn_LoadVarListFile_Click(object sender, EventArgs e)
         {
+            openFileDialog_VariablesList.InitialDirectory = Directory.GetCurrentDirectory();
             openFileDialog_VariablesList.ShowDialog();
+        }
+
+        public void btn_SelectTargetFile_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public static string GetVersionString(Version version, bool addBuildNumber, bool addRevisionNumber)
+        {
+            string versionString = version.Major.ToString() +
+                                   "." +
+                                   version.Minor.ToString();
+
+            if (addBuildNumber)
+            {
+                versionString += "." + version.Build.ToString();
+
+                if (addRevisionNumber)
+                {
+                    versionString += "." + version.Revision.ToString();
+                }
+            }
+
+            return versionString;
         }
     }
     public class VariableReplaceItem
