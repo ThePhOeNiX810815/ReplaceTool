@@ -58,7 +58,7 @@ namespace ReplaceTool
                 }
             }
 
-            File.WriteAllText(lbl_SourceFile.Text, targetFileString);
+            File.WriteAllText(lbl_TargetFile.Text, targetFileString);
 
             btn_CheckSource_Click(this, null);
 
@@ -263,6 +263,9 @@ namespace ReplaceTool
                 saveFileDialog_TargetFile.FileName = Path.Combine(dirName, fileName);
 
                 lbl_TargetFile.Text = saveFileDialog_TargetFile.FileName + fileExtension;
+
+                btn_SelectTargetFile.Enabled = true;
+                btn_LoadVarListFile.Enabled = true;
             }
         }
     }

@@ -135,6 +135,7 @@
             // 
             this.btn_LoadVarListFile.BackColor = System.Drawing.Color.DimGray;
             this.btn_LoadVarListFile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_LoadVarListFile.Enabled = false;
             this.btn_LoadVarListFile.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_LoadVarListFile.ForeColor = System.Drawing.Color.DeepSkyBlue;
             this.btn_LoadVarListFile.Location = new System.Drawing.Point(13, 88);
@@ -208,6 +209,7 @@
             // 
             this.btn_SelectTargetFile.BackColor = System.Drawing.Color.DimGray;
             this.btn_SelectTargetFile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_SelectTargetFile.Enabled = false;
             this.btn_SelectTargetFile.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_SelectTargetFile.ForeColor = System.Drawing.Color.DeepPink;
             this.btn_SelectTargetFile.Location = new System.Drawing.Point(13, 50);
