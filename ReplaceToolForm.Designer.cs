@@ -46,6 +46,7 @@
             this.btn_SelectTargetFile = new System.Windows.Forms.Button();
             this.lbl_VariablesList = new System.Windows.Forms.Label();
             this.lbl_Version = new System.Windows.Forms.Label();
+            this.saveFileDialog_TargetFile = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.variablesListGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -213,8 +214,9 @@
             this.btn_SelectTargetFile.Name = "btn_SelectTargetFile";
             this.btn_SelectTargetFile.Size = new System.Drawing.Size(127, 30);
             this.btn_SelectTargetFile.TabIndex = 8;
-            this.btn_SelectTargetFile.Text = "Load Target File";
+            this.btn_SelectTargetFile.Text = "Select Target File";
             this.btn_SelectTargetFile.UseVisualStyleBackColor = false;
+            this.btn_SelectTargetFile.Click += new System.EventHandler(this.btn_SelectTargetFile_Click);
             // 
             // lbl_VariablesList
             // 
@@ -287,6 +289,7 @@
         public System.Windows.Forms.DataGridViewTextBoxColumn col_Occurrences;
         public System.Windows.Forms.OpenFileDialog openFileDialog_VariablesList;
         public System.Windows.Forms.Label lbl_Version;
+        public System.Windows.Forms.SaveFileDialog saveFileDialog_TargetFile;
     }
 }
 

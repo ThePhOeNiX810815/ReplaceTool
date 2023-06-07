@@ -31,6 +31,7 @@ namespace ReplaceTool
         public void btn_SelectSourceFile_Click(object sender, EventArgs e)
         {
             openFileDialog_SourceFile.InitialDirectory = Directory.GetCurrentDirectory();
+            openFileDialog_SourceFile.Title = "Select source file to process ...";
             openFileDialog_SourceFile.ShowDialog();
         }
 
@@ -103,6 +104,7 @@ namespace ReplaceTool
         public void btn_LoadVarListFile_Click(object sender, EventArgs e)
         {
             openFileDialog_VariablesList.InitialDirectory = Directory.GetCurrentDirectory();
+            openFileDialog_VariablesList.Title = "Select variables list file to load ...";
             openFileDialog_VariablesList.ShowDialog();
         }
 
@@ -125,7 +127,7 @@ namespace ReplaceTool
             return versionString;
         }
 
-        private void openFileDialog_SourceFile_FileOk(object sender, CancelEventArgs e)
+        public void openFileDialog_SourceFile_FileOk(object sender, CancelEventArgs e)
         {
             // GET SOPURCE FILE INFO
             FileInfo sourceFile = new FileInfo(openFileDialog_SourceFile.FileName);
@@ -135,6 +137,9 @@ namespace ReplaceTool
             {
                 // SET SOURCE FILENAME AND PATH LABEL
                 lbl_SourceFile.Text = sourceFile.FullName;
+
+                // SET TARGET FILE NAME
+                SetTargetFileName();
 
                 // CHECK VARIABLES
                 btn_CheckSource_Click(this, null);
@@ -148,7 +153,7 @@ namespace ReplaceTool
             }
         }
 
-        private void btn_CheckSource_Click(object sender, EventArgs e)
+        public void btn_CheckSource_Click(object sender, EventArgs e)
         {
             // CHECK TARGET FILE EXISTENCE
             if (File.Exists(lbl_SourceFile.Text))
@@ -210,6 +215,8 @@ namespace ReplaceTool
                     }
                 }
 
+                SetTargetFileName();
+
                 // ENABLE REPLACE BUTTON, IF AT LEAST ONE POSSIBLE ENABLED VARIABLE IS ON THE LIST
                 btn_Replace.Enabled = toBeUpdated;
             }
@@ -222,6 +229,40 @@ namespace ReplaceTool
 
                 lbl_SourceFile.Text = string.Empty;
                 btn_CheckSource.Enabled = false;
+            }
+        }
+
+        public void btn_SelectTargetFile_Click(object sender, EventArgs e)
+        {
+            SetTargetFileName();
+
+            saveFileDialog_TargetFile.Title = "Select target file folder and filename ...";
+            saveFileDialog_TargetFile.ShowDialog();
+        }
+
+        public void SetTargetFileName()
+        {
+            if (File.Exists(lbl_SourceFile.Text))
+            {
+                string targetFile = lbl_SourceFile.Text;
+
+                if (File.Exists(lbl_TargetFile.Text))
+                {
+                    targetFile = lbl_TargetFile.Text;
+                }
+
+                string dirName = Path.GetDirectoryName(targetFile);
+                string fileExtension = Path.GetExtension(targetFile);
+                string fileName = Path.GetFileNameWithoutExtension(targetFile);
+                fileName += "_" + DateTime.Now.ToString("yyyy'-'MM'-'dd'_'HH'-'mm'-'ss");
+
+                saveFileDialog_TargetFile.Filter = fileExtension.ToUpper() + " File (*." + fileExtension + ")|*." + fileExtension;
+                saveFileDialog_TargetFile.FilterIndex = 0;
+                saveFileDialog_TargetFile.RestoreDirectory = true;
+                saveFileDialog_TargetFile.SupportMultiDottedExtensions = true;
+                saveFileDialog_TargetFile.FileName = Path.Combine(dirName, fileName);
+
+                lbl_TargetFile.Text = saveFileDialog_TargetFile.FileName + fileExtension;
             }
         }
     }
