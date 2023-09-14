@@ -18,7 +18,7 @@ phoneBusinessAreaCode = '000',
 phoneBusinessUnified = '000', 
 emailPrivate = 'XXX', 
 emailBusiness = 'XXX' 
-where customerid = '[#ID des Kunden]';
+where customerid = '1235';
 update orders
 set company = 'XXX',
 surname = 'XXX',
@@ -62,7 +62,7 @@ bank = NULL,
 iban = NULL,
 bic = NULL,
 cityid = NULL
-where customerid = '[#ID des Kunden]';
+where customerid = '1235';
 update contracts
 set company = 'XXX',
 surname = 'XXX',
@@ -108,26 +108,26 @@ cityid = 1,
 usageNet = 1,
 `usage` = 1,
 email = NULL
-where id = '[#ID des Vertrags]';
+where id = '4567';
 update contract_tariffs
 set usageCustomer = 1,
 productBonus = NULL,
 productBonusPercent = NULL,
 productInstantBonus = NULL
-where contractId = '[#ID des Vertrags]';
+where contractId = '4567';
 update contract_banking_data
 set iban = NULL,
 bic = NULL,
 bank = NULL,
 sepaMandate = NULL,
 accountHolder = NULL
-where customerid = '[#ID des Kunden]';
+where customerid = '1235';
 update bankaccount_orders
 set accountHolder = 'XXX',
 iban = NULL,
 bic = NULL
-where contractid = '[#ID des Vertrags]';
+where contractid = '4567';
 Update event_contents ec left join event_relations er on ec.
 eventId=er.eventID 
 set ec.json=""
-where er.class='crmi\\model\\contract' and er.refId='[#ID des Vertrags]';
+where er.class='crmi\\model\\contract' and er.refId='4567';
